@@ -30,6 +30,7 @@ export const postArticle = async (article) => {
   try {
     let response = await fetch(`http://localhost:4000/articles/`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(article),
     });
     if (response.ok) {
@@ -63,7 +64,7 @@ export const updateArticle = async (article, articleId) => {
 export const deleteArticle = async (articleId) => {
   try {
     let response = await fetch(`http://localhost:4000/articles/${articleId}`, {
-      method: "DELTE",
+      method: "DELETE",
     });
     if (response.ok) {
       return await response.json();
