@@ -32,3 +32,22 @@ export const postReview = async (review, articleId) => {
     return error;
   }
 };
+
+export const deleteReview = async (articleId, reviewId) => {
+  try {
+    let response = await fetch(
+      `http://localhost:4000/articles/${articleId}/reviews/${reviewId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (response.ok) {
+      return await response.json();
+    } else {
+      let error = await response.json();
+      return error;
+    }
+  } catch (error) {
+    return error;
+  }
+};

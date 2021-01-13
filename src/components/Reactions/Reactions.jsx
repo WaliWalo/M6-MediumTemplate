@@ -3,7 +3,11 @@ import { IoLogoTwitter, IoLogoLinkedin, IoLogoFacebook } from "react-icons/io";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { FaRegComment } from "react-icons/fa";
 import { Button, ListGroup, Spinner } from "react-bootstrap";
-import { getReviews, postReview } from "../../apiFunctions/reviewsApi";
+import {
+  deleteReview,
+  getReviews,
+  postReview,
+} from "../../apiFunctions/reviewsApi";
 export default function Reactions(props) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +47,11 @@ export default function Reactions(props) {
     setReview(newReview);
   };
 
-  const handleRemoveReview = async () => {};
+  const handleRemoveReview = async (e) => {
+    setLoading(true);
+    await deleteReview(props.articleId, e.target.id);
+    setLoading(false);
+  };
   return (
     <>
       <div
@@ -92,7 +100,7 @@ export default function Reactions(props) {
                 {review.text}{" "}
                 <Button
                   id={review._id}
-                  onClick={(e) => this.handleRemoveReview(e)}
+                  onClick={(e) => handleRemoveReview(e)}
                   className="my-3"
                   variant="danger"
                 >
