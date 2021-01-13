@@ -46,8 +46,11 @@ export const postArticle = async (article) => {
 
 export const updateArticle = async (article, articleId) => {
   try {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
     let response = await fetch(`http://localhost:4000/articles/${articleId}`, {
       method: "PUT",
+      headers: myHeaders,
       body: JSON.stringify(article),
     });
     if (response.ok) {

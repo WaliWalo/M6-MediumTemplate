@@ -29,6 +29,10 @@ export default class Stories extends Component {
     }
   }
 
+  handleUpdateArticle(e) {
+    this.props.history.push(`/new-story?id=${e.target.id}`);
+  }
+
   render() {
     return (
       <Container>
