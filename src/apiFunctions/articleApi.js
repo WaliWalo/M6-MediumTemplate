@@ -2,7 +2,8 @@ export const getArticles = async () => {
   try {
     let response = await fetch(`http://localhost:4000/articles/`);
     if (response.ok) {
-      return await response.json();
+      let data = await response.json();
+      return data.articles;
     } else {
       let error = await response.json();
       return error;

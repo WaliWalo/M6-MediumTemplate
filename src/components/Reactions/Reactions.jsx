@@ -1,9 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoLogoTwitter, IoLogoLinkedin, IoLogoFacebook } from "react-icons/io";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { FaRegComment } from "react-icons/fa";
-import { Button } from "react-bootstrap";
-export default function Reactions() {
+import { Button, ListGroup, Spinner } from "react-bootstrap";
+import { getReviews, postReview } from "../../apiFunctions/reviewsApi";
+export default function Reactions(props) {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [review, setReview] = useState({ user: "admin" });
+
+  useEffect(() => {
+    // setReviews(props.reviews);
+    fetchReviews();
+  }, [loading]);
+
+  async function fetchReviews() {
+    let { reviews } = await getReviews(props.articleId);
+    setReviews(reviews);
+    if (reviews.length > 0) {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit() {
+    setLoading(true);
+    let response = await postReview(review, props.articleId);
+    if (response.errors) {
+      alert(response.message);
+      setLoading(false);
+    } else if (response.keyPattern) {
+      alert("Something went wrong");
+      setLoading(false);
+    } else {
+      setReview({ user: "admin", text: "" });
+      alert("success");
+      setLoading(false);
+    }
+  }
+
+  const handleOnChange = (e) => {
+    let newReview = { ...review, text: e.target.value };
+    setReview(newReview);
+  };
+
+  const handleRemoveReview = async () => {};
   return (
     <>
       <div
@@ -41,9 +81,43 @@ export default function Reactions() {
       </div>
 
       <div style={{ marginTop: 50, marginBottom: 200 }}>
+        {loading ? (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        ) : (
+          <ListGroup>
+            {reviews.map((review) => (
+              <ListGroup.Item key={review._id}>
+                {review.text}{" "}
+                <Button
+                  id={review._id}
+                  onClick={(e) => this.handleRemoveReview(e)}
+                  className="my-3"
+                  variant="danger"
+                >
+                  DELETE
+                </Button>
+                {/* <Button
+                id={review._id}
+                onClick={(e) => this.handleUpdateArticle(e)}
+              >
+                Update
+              </Button> */}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
         <label>What are your thoughts?</label>
-        <textarea style={{ width: "100%", padding: 20 }} />
-        <Button variant="success">Send</Button>
+        <textarea
+          onChange={(e) => handleOnChange(e)}
+          id="text"
+          style={{ width: "100%", padding: 20 }}
+          value={review.text}
+        />
+        <Button variant="success" onClick={() => handleSubmit()}>
+          Send
+        </Button>
       </div>
     </>
   );
