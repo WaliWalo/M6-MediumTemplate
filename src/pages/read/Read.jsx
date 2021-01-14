@@ -62,7 +62,10 @@ class Read extends Component {
             <p>{this.state.article.content}</p>
             <p>{this.state.article.content}</p>
             <p>{this.state.article.content}</p>
-            <Reactions articleId={this.state.article._id} />
+            <Reactions
+              articleId={this.state.article._id}
+              claps={this.state.article.claps}
+            />
           </>
         ) : (
           <Spinner animation="border" role="status">
